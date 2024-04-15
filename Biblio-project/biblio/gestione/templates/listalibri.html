@@ -21,6 +21,10 @@
     {% else %}
       <p> Non ci sono libri! </p>
     {% endif %}
+
+    <a href="{% url 'gestione:crealibro' %}">Inserisci Libro</a>
+    <a href="{% url 'gestione:modificalibro' %}" style="margin-left: 100px;">Modifica Libro</a>
+    <a href="{% url 'gestione:eliminalibro' %}" style="margin-left: 100px;">Elimina Libro</a>
     </div>
 
 {% endblock %}

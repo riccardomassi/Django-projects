@@ -1,0 +1,28 @@
+<!-- Template per l'eliminazione di un libro dal database -->
+{% extends 'base.html' %}
+
+{% block content %}
+
+  <div style="max-width: 50%; margin: auto;">
+    <h1>{{ title }}</h1>
+    {% if message %}
+      <p>{{ message }}</p>
+      <a href="{% url 'gestione:listalibri' %}">Lista Libri</a><br><br>
+    {% endif %}
+
+    <form method="POST">
+      {% csrf_token %}
+      <label for="libro_selezionato">Seleziona il libro da eliminare:</label>
+      <select name="libro_selezionato" id="libro_selezionato" required>
+        {% for libro in libri %}
+          <option value="{{ libro.titolo }}">{{ libro.titolo }}</option>
+        {% endfor %}
+      </select><br><br>
+      <button type="submit">Elimina Libro</button>
+    </form><br><br>
+
+    <a href="{% url 'gestione:crealibro' %}">Inserisci Libro</a>
+    <a href="{% url 'gestione:modificalibro' %}" style="margin-left: 100px;">Modifica Libro</a>
+  </div>
+  
+{% endblock %}

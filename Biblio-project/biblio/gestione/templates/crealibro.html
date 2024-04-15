@@ -1,0 +1,27 @@
+<!-- Template per la creazione di un libro -->
+{% extends 'base.html' %}
+
+{% block content %}
+
+  <div style="max-width: 50%; margin: auto;">
+    <h1>{{ title }}</h1>
+    {% if message %}
+      <p>{{ message }}</p>
+      <a href="{% url 'gestione:listalibri' %}">Lista Libri</a><br><br>
+    {% endif %}
+
+    <form action="/gestione/crealibro">
+      <label for="autore">Autore:</label><br>
+      <input type="text" name="autore" id="autore" required><br>
+      <label for="titolo">Titolo:</label><br>
+      <input type="text" name="titolo" id="titolo" required><br>
+      <label for="pagine">Pagine:</label><br>
+      <input type="number" name="pagine" id="pagine" required><br><br>
+      <button type="submit">Crea Entry</button>
+    </form><br><br>
+
+    <a href="{% url 'gestione:modificalibro' %}">Modifica Libro</a>
+    <a href="{% url 'gestione:eliminalibro' %}" style="margin-left: 100px;">Elimina Libro</a>
+  </div>
+
+{% endblock %}
