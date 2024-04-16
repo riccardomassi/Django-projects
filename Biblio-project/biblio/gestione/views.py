@@ -1,5 +1,6 @@
-#guarda che cos è la richiesta http e  il  protocollo http (protocolli di rete) + richieste GET 
 from django.http import HttpResponse
+import pytz
+from django.utils import timezone
 from datetime import datetime
 from django.shortcuts import get_object_or_404, render
 import logging
@@ -9,10 +10,13 @@ logger = logging.getLogger(__name__)
 MATTONE_THRESHOLD = 300
 
 def hello_template(request):
-    ctx = { "title" : "Hello Template",
-           "lista" : [datetime.now(), datetime.today().strftime('%A'),  datetime.today().strftime('%B')]}
+    # Ottieni l'orario attuale nel fuso orario 'Europe/Rome'
+    rome_time = timezone.now().astimezone(pytz.timezone('Europe/Rome'))
+
+    ctx = {"title" : "Hello Template",
+           "date" : rome_time}
     
-    return render(request, template_name="baseext.html", context=ctx) 
+    return render(request, template_name="home.html", context=ctx) 
 
 def lista_libri(request):
     templ = "listalibri.html"
