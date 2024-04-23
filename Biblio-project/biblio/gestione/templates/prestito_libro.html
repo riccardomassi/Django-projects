@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Prestito Libro
+{% endblock %}
+
+{% block content %}
+<div style="text-align: center;">
+  <h1>{{ libro.titolo }}</h1>
+  <h2>Copie Disponibili:</h2>
+  <ul style="list-style-type: none; padding-left: 0;">
+    {% for copia in copie_disponibili %}
+    <li style="margin-bottom: 10px;">
+      <form action="{% url 'gestione:esegui_prestito' copia.id %}" method="post" style="display: inline-block;">
+        {% csrf_token %}
+        <button type="submit">Prendi Copia {{ copia.id }}</button>
+      </form>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+{% endblock %}

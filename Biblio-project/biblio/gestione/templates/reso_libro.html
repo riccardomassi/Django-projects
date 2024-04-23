@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Reso Libro
+{% endblock %}
+
+{% block content %}
+<div style="text-align: center;">
+  <h1>{{ libro.titolo }}</h1>
+  <h2>Seleziona Copia da Restituire:</h2>
+  <form action="{% url 'gestione:esegui_reso' %}" method="post">
+    {% csrf_token %}
+    <select name="copia_id" style="margin-bottom: 20px;">
+      {% for copia in copie_disponibili %}
+      <option value="{{ copia.id }}">Copia {{ copia.id }}</option>
+      {% endfor %}
+    </select>
+    <br>
+    <button type="submit">Esegui Reso</button>
+  </form>
+</div>
+{% endblock %}

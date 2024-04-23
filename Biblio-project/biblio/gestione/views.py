@@ -1,10 +1,9 @@
-from django.http import HttpResponse
 import pytz
 from django.utils import timezone
 from datetime import datetime
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
 import logging
-from .models import Libro
+from .models import Libro, Copia
 
 logger = logging.getLogger(__name__)
 MATTONE_THRESHOLD = 300
@@ -17,13 +16,6 @@ def hello_template(request):
            "date" : rome_time}
     
     return render(request, template_name="home.html", context=ctx) 
-
-def lista_libri(request):
-    templ = "listalibri.html"
-
-    ctx = { "title": "Lista di Libri", "listalibri": Libro.objects.all()}
-
-    return render(request,template_name=templ,context=ctx)
 
 def mattoni(request):
     templ = "listalibri.html"
@@ -107,4 +99,39 @@ def elimina_libro(request):
     libri = Libro.objects.all()  # Recupera tutti i libri per popolare il menu a tendina
     return render(request, template_name="eliminalibro.html", 
                   context={"title": "Elimina Libro", "message": message, "libri": libri})
+
+
+def lista_libri(request):
+    libri = Libro.objects.all()
+    return render(request, 'listalibri.html', {'libri': libri})
+
+def prestito_libro(request, libro_id):
+    libro = Libro.objects.get(pk=libro_id)
+    copie_disponibili = Copia.objects.filter(libro=libro, data_prestito=None)
+    return render(request, 'prestito_libro.html', {'libro': libro, 'copie_disponibili': copie_disponibili})
+
+def esegui_prestito(request, copia_id):
+    copia = Copia.objects.get(pk=copia_id)
+    copia.data_prestito = timezone.now()
+    copia.save()
+    messaggio = "Prestito avvenuto con successo."
+    return render(request, 'avvenuto.html', {'messaggio': messaggio})
+
+def reso_libro(request, libro_id):
+    libro = Libro.objects.get(pk=libro_id)
+    copie_disponibili = Copia.objects.filter(libro=libro, data_prestito__isnull=False)
+    copie_scadute = Copia.objects.filter(libro=libro, scaduto=True)
+    return render(request, 'reso_libro.html', {'libro': libro, 'copie_disponibili': copie_disponibili, 'copie_scadute': copie_scadute})
+
+def esegui_reso(request):
+    if request.method == 'POST':
+        copia_id = request.POST.get('copia_id')
+        copia = Copia.objects.get(pk=copia_id)
+        if copia.scaduto:
+            messaggio = "Reso avvenuto con successo. Porta il libro in tempo la prossima volta."
+        else:
+            messaggio = "Reso avvenuto con successo."
+        copia.data_prestito = None
+        copia.save()
+        return render(request, 'avvenuto.html', {'messaggio': messaggio})
 

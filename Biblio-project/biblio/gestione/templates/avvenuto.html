@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Reso Avvenuto
+{% endblock %}
+
+{% block content %}
+<div style="text-align: center;">
+  <h1>{{ messaggio }}</h1>
+  <a href="{% url 'gestione:listalibri' %}" style="text-decoration: none;">Torna alla Lista dei Libri</a>
+</div>
+{% endblock %}
