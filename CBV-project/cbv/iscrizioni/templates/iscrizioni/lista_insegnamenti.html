@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}Lista Insegnamenti{% endblock %}
+
+{% block content %}
+<h1>Insegnamenti</h1>
+<ul>
+  {% for insegnamento in object_list %}
+  <li>{{ insegnamento.titolo }}</li>
+  <ul>
+    {% for studente in insegnamento.studenti_list %}
+    <li>{{ studente.name }} {{ studente.surname }}</li>
+    {% empty %}
+    <li>Nessuno studente iscritto a questo insegnamento.</li>
+    {% endfor %}
+  </ul>
+  {% empty %}
+  <li>Nessun insegnamento presente.</li>
+  {% endfor %}
+</ul>
+{% endblock %}
