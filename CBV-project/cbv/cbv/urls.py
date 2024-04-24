@@ -23,5 +23,5 @@ urlpatterns = [
     path('iscrizioni/', include('iscrizioni.urls')),
 ]
 
-erase_db()
+#erase_db()
 init_db()

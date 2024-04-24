@@ -1,6 +1,7 @@
 from django.urls import reverse_lazy
-from django.views.generic import ListView, CreateView, DetailView
+from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
 from .models import *
+from django.shortcuts import render
 
 class ListaStudentiView(ListView):
   model = Studente
@@ -62,3 +63,52 @@ class CreateInsegnamentoView(CreateView):
 class DetailInsegnamentoView(DetailView):
   model = Insegnamento
   template_name = "iscrizioni/insegnamento.html"
+
+class UpdateInsegnamentoView(UpdateView):
+  model = Insegnamento
+  template_name = "iscrizioni/modifica_insegnamento.html"
+  fields = "__all__"
+  
+  def get_success_url(self):
+    return reverse_lazy("iscrizioni:insegnamento", kwargs={"pk": self.object.pk})
+  
+class DeleteEntitaView(DeleteView):
+  template_name = "iscrizioni/elimina_entita.html"
+
+  def get_context_data(self, **kwargs):
+    ctx = super().get_context_data(**kwargs)
+    entita = "Studente"
+    if self.model == Insegnamento:
+      entita = "Insegnamento"
+    ctx["entita"] = entita
+    ctx["name"] = self.get_object()
+    return ctx
+  
+  def get_success_url(self): 
+    if self.model == Studente:
+      return reverse_lazy("iscrizioni:listastudenti")
+    else: 
+      reverse_lazy("iscrizioni:listainsegnamenti")
+
+class DeleteStudenteView(DeleteEntitaView):
+  model = Studente
+
+class DeleteInsegnamentoView(DeleteEntitaView):
+  model = Insegnamento
+
+
+class CercaStudentiView(ListView):
+  model = Studente
+  template_name = "iscrizioni/cerca_studenti.html"
+
+  def post(self, request):
+    name = request.POST.get('name')
+    surname = request.POST.get('surname')
+    studenti = self.model.objects.filter(name__icontains=name, surname__icontains=surname)
+    insegnamenti = Insegnamento.objects.filter(studenti__in=studenti)
+    context = {
+      'studenti': studenti,
+      'insegnamenti': insegnamenti
+    }
+    return render(request, self.template_name, context)
+  

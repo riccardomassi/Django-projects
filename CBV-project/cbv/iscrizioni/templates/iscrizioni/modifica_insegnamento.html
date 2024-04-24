@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block title %} Modifica Insegnamento {% endblock %}
+{% block content %}
+<h1> Modifica Insegnamento </h1>
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit"> Modifica </button>
+</form>
+{% endblock %}

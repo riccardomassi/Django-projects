@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %} Cerca Studenti {% endblock %}
+
+{% block content %}
+<h1> Cerca Studenti </h1>
+<form method="post">
+  {% csrf_token %}
+  <input type="text" name="name" placeholder="Nome">
+  <input type="text" name="surname" placeholder="Cognome">
+  <button type="submit"> Cerca </button>
+  <ul>
+    {% for studente in studenti %}
+      <li>ID: {{ studente.pk }}, Nome: {{ studente.name }} {{ studente.surname }} </li>
+      <ul>
+        {% for insegnamento in insegnamenti %}
+          <li>{{ insegnamento.titolo }}</li>
+        {% endfor %}
+      </ul><br>
+    {% endfor %}
+  </ul>
+</form>
+{% endblock %}
