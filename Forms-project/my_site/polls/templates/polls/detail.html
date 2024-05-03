@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>{{ view.get_context_data.question }}</h1>
+
+<ul>
+    {% for choice in view.get_context_data.choices %}
+        <li>{{ choice }}, {{ choice.votes }} votes </li>
+    {% endfor %}
+</ul>
+
+{% endblock %}

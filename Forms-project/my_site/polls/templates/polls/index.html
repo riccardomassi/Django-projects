@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Questions</h1>
+<ul>
+    {% for question in view.get_queryset %}
+        <li><a href="{% url 'polls:detail' question.pk %}">{{ question }}</a></li>
+    {% endfor %}
+</ul>
+
+{% endblock %}
